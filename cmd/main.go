@@ -35,6 +35,20 @@ var possibility100 = lottery.Possibility{
 }
 var sample100 = lottery.NewSample3(possibility100)
 
+var x2Possibility = lottery.Possibility{
+	"A2":   190,
+	"A3":   185,
+	"A4":   75,
+	"A4.5": 40,
+	"A5":   10,
+	"B1.5": 68,
+	"B2":   100,
+	"B3":   32,
+	"C1.5": 102,
+	"C2":   150,
+	"C3":   48,
+}
+
 var score = 0
 
 func main() {
