@@ -16,9 +16,9 @@ func Init() {
 }
 
 type Sample struct {
-	possibility Possibility
+	possibility     Possibility
 	all_possibility int
-	middle []string
+	middle          []string
 }
 
 func NewSample(p Possibility) *Sample {
@@ -38,7 +38,7 @@ func (s *Sample) Lot() string {
 	return s.middle[i]
 }
 
-func sameElementArray(s []string, elem string, length int)[]string {
+func sameElementArray(s []string, elem string, length int) []string {
 	for i := 0; i < length; i++ {
 		s = append(s, elem)
 	}
@@ -46,14 +46,14 @@ func sameElementArray(s []string, elem string, length int)[]string {
 }
 
 type Sample2 struct {
-	possibility Possibility
+	possibility     Possibility
 	all_possibility int
-	middle []poss
+	middle          []poss
 }
 
-type poss struct{
+type poss struct {
 	threshold int
-	val string
+	val       string
 }
 
 func NewSample2(p Possibility) *Sample2 {
@@ -84,15 +84,15 @@ func (s *Sample2) Lot() string {
 
 // alias sampling
 type Sample3 struct {
-	possibility Possibility
-	extend int
+	possibility     Possibility
+	extend          int
 	all_possibility int
-	middle []alias
+	middle          []alias
 }
 
 type alias struct {
-	value string
-	value2 string
+	value     string
+	value2    string
 	threshold int
 }
 
@@ -111,7 +111,7 @@ func NewSample3(p Possibility) *Sample3 {
 
 	larges := make([]alias, 0, extend)
 	smalls := make([]alias, 0, extend)
-	
+
 	for key, value := range p {
 		new_value := value * extend
 		if new_value > all_possibility {
@@ -146,7 +146,7 @@ func (s *Sample3) Lot() string {
 	i := rand.Intn(s.extend)
 	poss := rand.Intn(s.all_possibility)
 	mid := s.middle[i]
-	if (mid.threshold <= poss) {
+	if mid.threshold <= poss {
 		return mid.value2
 	}
 	return mid.value

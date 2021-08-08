@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"lottery/lottery"
+	"strconv"
 )
 
 // 单抽概率
@@ -48,14 +49,38 @@ var x2Possibility = lottery.Possibility{
 	"C2":   150,
 	"C3":   48,
 }
+var samplex2 = lottery.NewSample3(x2Possibility)
 
 var score = 0
 
-func main() {
-	gots := lot(10)
-	fmt.Println(gots)
-	fmt.Println(score)
+var jieguo map[string]int
+
+var plans []int = []int{
+	100, 100, 100, 100, -1, 10, 100, 100,
+	100, 100, 100, 100, 100, 100, 100, 100,
+	100, 100, 100, 100, 100, 100, 100, 100,
+	100, 100, 100, 100, 100, 100, 100, 100,
+	100, 100, 100, 100, 100, 100, 100, 100,
+	100, 100, 100, 100, 100, 100, 100, 100,
 }
+
+func main() {
+	jieguo = make(map[string]int)
+	for _, plan := range plans {
+		if plan == -1 {
+			teshu = false
+			continue
+		}
+		gots := lot(plan)
+		for _, item := range gots {
+			jieguo[item]++
+		}
+	}
+	fmt.Println(jieguo)
+}
+
+var teshu_sample *lottery.Sample3
+var teshu = false
 
 func lot(times int) []string {
 	gots := make([]string, 0, times)
@@ -72,13 +97,30 @@ func lot(times int) []string {
 	} else {
 		score = score + 1
 	}
-	for i := 0; i < times; i++ {
-		got := sample.Lot()
-		gots = append(gots, got)
+	if teshu {
+		for i := 0; i < times; i++ {
+			got := teshu_sample.Lot()
+			gots = append(gots, got)
+		}
+	} else {
+		for i := 0; i < times; i++ {
+			got := sample.Lot()
+			gots = append(gots, got)
+		}
 	}
 
 	if score > 400 {
 		score = score % 400
+		temp := samplex2.Lot()
+		item := temp[0:1]
+		number := temp[1:]
+		times, _ := strconv.ParseFloat(number, 64)
+		new_possibility := possibility
+		// todo: gailv 需要改成正确的英文单词
+		new_gailv := int(float64(new_possibility[item]) * times)
+		new_possibility[item] = new_gailv
+		teshu_sample = lottery.NewSample3(possibility)
+		teshu = true
 	}
 
 	return gots
