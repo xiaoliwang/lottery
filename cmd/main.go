@@ -24,17 +24,17 @@ var sample = lottery.NewSample3(possibility)
 
 // 十连抽概率
 var possibility10 = lottery.Possibility{
-	"B": 2,
-	"C": 8,
-	"D": 30,
-	"E": 960,
+	"F": 5,
+	"G": 95,
 }
 var sample10 = lottery.NewSample3(possibility10)
 
 // 百连抽概率
 var possibility100 = lottery.Possibility{
-	"F": 5,
-	"G": 95,
+	"B": 2,
+	"C": 8,
+	"D": 30,
+	"E": 960,
 }
 var sample100 = lottery.NewSample3(possibility100)
 
@@ -76,7 +76,7 @@ func main() {
 var teshu_sample *lottery.Sample3
 
 var teshu = false
-var baodi = true
+var baodi = false
 
 func lot(times int) []string {
 	gots := make([]string, 0, times)
@@ -98,7 +98,8 @@ func lot(times int) []string {
 				gots[9] = got
 			}
 		} else if times == 100 {
-			if util.StringContains(util.Keys(possibility100), gots) {
+			if !util.StringContains(util.Keys(possibility100), gots) {
+				fmt.Println("hello")
 				got := sample100.Lot()
 				gots[99] = got
 			}
