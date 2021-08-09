@@ -76,7 +76,7 @@ func main() {
 var teshu_sample *lottery.Sample3
 
 var teshu = false
-var baodi = false
+var baodi = true
 
 func lot(times int) []string {
 	gots := make([]string, 0, times)
@@ -99,7 +99,6 @@ func lot(times int) []string {
 			}
 		} else if times == 100 {
 			if !util.StringContains(util.Keys(possibility100), gots) {
-				fmt.Println("hello")
 				got := sample100.Lot()
 				gots[99] = got
 			}

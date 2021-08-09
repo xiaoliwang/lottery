@@ -15,6 +15,7 @@ func Keys(m lottery.Possibility) []string {
 	i := 0
 	for k := range m {
 		keys[i] = k
+		i++
 	}
 	return keys
 }
