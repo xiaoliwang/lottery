@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"lottery/data"
 	"lottery/lottery"
+	"lottery/util"
 	"strconv"
 )
 
@@ -55,17 +57,9 @@ var score = 0
 
 var jieguo map[string]int
 
-var plans []int = []int{
-	100, 100, 100, 100, -1, 10, 100, 100,
-	100, 100, 100, 100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100, 100, 100, 100,
-}
-
 func main() {
 	jieguo = make(map[string]int)
+	plans := data.GetPlan()
 	for _, plan := range plans {
 		if plan == -1 {
 			teshu = false
@@ -80,32 +74,59 @@ func main() {
 }
 
 var teshu_sample *lottery.Sample3
+
 var teshu = false
+var baodi = true
 
 func lot(times int) []string {
 	gots := make([]string, 0, times)
-	if times == 10 {
-		got := sample10.Lot()
-		gots = append(gots, got)
-		times--
-		score = score + 11
-	} else if times == 100 {
-		got := sample100.Lot()
-		gots = append(gots, got)
-		times--
-		score = score + 115
-	} else {
-		score = score + 1
-	}
-	if teshu {
-		for i := 0; i < times; i++ {
-			got := teshu_sample.Lot()
-			gots = append(gots, got)
+	if baodi {
+		if teshu {
+			for i := 0; i < times; i++ {
+				got := teshu_sample.Lot()
+				gots = append(gots, got)
+			}
+		} else {
+			for i := 0; i < times; i++ {
+				got := sample.Lot()
+				gots = append(gots, got)
+			}
+		}
+		if times == 10 {
+			if !util.StringContains(util.Keys(possibility10), gots) {
+				got := sample10.Lot()
+				gots[9] = got
+			}
+		} else if times == 100 {
+			if util.StringContains(util.Keys(possibility100), gots) {
+				got := sample100.Lot()
+				gots[99] = got
+			}
 		}
 	} else {
-		for i := 0; i < times; i++ {
-			got := sample.Lot()
+		if times == 10 {
+			got := sample10.Lot()
 			gots = append(gots, got)
+			times--
+			score = score + 11
+		} else if times == 100 {
+			got := sample100.Lot()
+			gots = append(gots, got)
+			times--
+			score = score + 115
+		} else {
+			score = score + 1
+		}
+		if teshu {
+			for i := 0; i < times; i++ {
+				got := teshu_sample.Lot()
+				gots = append(gots, got)
+			}
+		} else {
+			for i := 0; i < times; i++ {
+				got := sample.Lot()
+				gots = append(gots, got)
+			}
 		}
 	}
 
@@ -115,7 +136,7 @@ func lot(times int) []string {
 		item := temp[0:1]
 		number := temp[1:]
 		times, _ := strconv.ParseFloat(number, 64)
-		new_possibility := possibility
+		new_possibility, _ := util.NewStringInt(possibility)
 		// todo: gailv 需要改成正确的英文单词
 		new_gailv := int(float64(new_possibility[item]) * times)
 		new_possibility[item] = new_gailv
